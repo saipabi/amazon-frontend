@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-amazon-bg text-gray-900 font-sans antialiased selection:bg-amazon-yellow selection:text-black;
+  }
+}
+
+/* Custom Amazon styling utilities */
+.btn-amazon-primary {
+  @apply bg-gradient-to-b from-[#f7dfa5] to-[#f0c14b] border border-[#a88734] text-black px-4 py-2 rounded-md font-medium text-sm hover:from-[#f5d78e] hover:to-[#eeb933] active:from-[#e2b130] transition duration-150 shadow-sm cursor-pointer text-center;
+}
+
+.btn-amazon-secondary {
+  @apply bg-gradient-to-b from-[#f7f8fa] to-[#e7e9ec] border border-[#adb1b8] text-black px-4 py-2 rounded-md text-sm hover:from-[#e7e9ec] hover:to-[#d9dce1] transition duration-150 shadow-sm cursor-pointer text-center;
+}
+
+.prime-badge {
+  @apply inline-flex items-center text-xs font-bold italic text-[#00a8e1] tracking-tighter;
+}
+
+.product-card-hover {
+  @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #232f3e;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #febd69;
+}
