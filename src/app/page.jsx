@@ -6,7 +6,7 @@ import SubHeader from '../components/SubHeader';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard from '../components/ProductCard';
 import { fetchProducts } from '../lib/api';
-import { Sparkles, Truck, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Sparkles, Truck, ShieldCheck, RefreshCw, Filter } from 'lucide-react';
 
 export default function HomePage() {
   const [category, setCategory] = useState('All');
@@ -24,6 +24,8 @@ export default function HomePage() {
     setProducts(data);
     setLoading(false);
   };
+
+  const isFashionCategory = ['Fashion', "Men's Wear", "Women's Wear", "Kids' Wear"].includes(category);
 
   return (
     <div className="min-h-screen bg-amazon-bg">
@@ -70,8 +72,57 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Fashion Sub-Category Quick Filters */}
+        {isFashionCategory && (
+          <div className="bg-white p-3 rounded-t-lg border border-b-0 border-gray-200 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold text-gray-700 flex items-center gap-1 mr-2">
+              <Filter className="w-4 h-4 text-amazon-orange" /> Filter Fashion:
+            </span>
+            <button
+              onClick={() => setCategory('Fashion')}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+                category === 'Fashion'
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              All Fashion
+            </button>
+            <button
+              onClick={() => setCategory("Men's Wear")}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+                category === "Men's Wear"
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              👔 Men's Fashion
+            </button>
+            <button
+              onClick={() => setCategory("Women's Wear")}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+                category === "Women's Wear"
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              👗 Women's Fashion & Dresses
+            </button>
+            <button
+              onClick={() => setCategory("Kids' Wear")}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+                category === "Kids' Wear"
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              👶 Kids' Fashion
+            </button>
+          </div>
+        )}
+
         {/* Section Title */}
-        <div className="bg-white p-4 rounded-t-lg border border-gray-200 flex items-center justify-between mb-0">
+        <div className={`bg-white p-4 ${isFashionCategory ? '' : 'rounded-t-lg'} border border-gray-200 flex items-center justify-between mb-0`}>
           <h1 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
             <span>{category === 'All' ? "Today's Great Deals & Best Sellers" : `${category} Collection`}</span>
             <span className="text-xs bg-red-600 text-white font-black px-2 py-0.5 rounded">UP TO 50% OFF</span>

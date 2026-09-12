@@ -53,7 +53,10 @@ export default function Header({ selectedCategory = 'All', onCategoryChange }) {
             <option value="All">All Categories</option>
             <option value="Electronics">Electronics</option>
             <option value="Mobiles">Mobiles</option>
-            <option value="Fashion">Fashion</option>
+            <option value="Fashion">Fashion (All)</option>
+            <option value="Men's Wear">Men's Wear</option>
+            <option value="Women's Wear">Women's Wear</option>
+            <option value="Kids' Wear">Kids' Wear</option>
             <option value="Home">Home</option>
             <option value="Books">Books</option>
           </select>
