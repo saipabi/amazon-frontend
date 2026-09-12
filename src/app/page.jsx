@@ -6,7 +6,7 @@ import SubHeader from '../components/SubHeader';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard from '../components/ProductCard';
 import { fetchProducts } from '../lib/api';
-import { Sparkles, Truck, ShieldCheck, RefreshCw, Filter } from 'lucide-react';
+import { Sparkles, Truck, ShieldCheck, RefreshCw, Filter, Shirt } from 'lucide-react';
 
 export default function HomePage() {
   const [category, setCategory] = useState('All');
@@ -26,6 +26,15 @@ export default function HomePage() {
   };
 
   const isFashionCategory = ['Fashion', "Men's Wear", "Women's Wear", "Kids' Wear"].includes(category);
+
+  const getSectionTitle = () => {
+    if (category === 'All') return "Today's Great Deals & Best Sellers";
+    if (category === "Men's Wear") return "Men's Clothing & Dresses";
+    if (category === "Women's Wear") return "Women's Dresses & Clothing";
+    if (category === "Kids' Wear") return "Kids' Dresses & Clothing";
+    if (category === "Fashion") return "All Fashion (Dresses, Footwear & Accessories)";
+    return `${category} Collection`;
+  };
 
   return (
     <div className="min-h-screen bg-amazon-bg">
@@ -72,51 +81,51 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Fashion Sub-Category Quick Filters */}
+        {/* Fashion Sub-Category Quick Filter Pills */}
         {isFashionCategory && (
           <div className="bg-white p-3 rounded-t-lg border border-b-0 border-gray-200 flex flex-wrap items-center gap-2">
             <span className="text-xs font-bold text-gray-700 flex items-center gap-1 mr-2">
-              <Filter className="w-4 h-4 text-amazon-orange" /> Filter Fashion:
+              <Shirt className="w-4 h-4 text-amazon-orange" /> Select Department:
             </span>
-            <button
-              onClick={() => setCategory('Fashion')}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
-                category === 'Fashion'
-                  ? 'bg-amazon-dark text-amazon-yellow font-bold'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              All Fashion
-            </button>
             <button
               onClick={() => setCategory("Men's Wear")}
               className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
                 category === "Men's Wear"
-                  ? 'bg-amazon-dark text-amazon-yellow font-bold'
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              👔 Men's Fashion
+              👔 Men's Dresses Only
             </button>
             <button
               onClick={() => setCategory("Women's Wear")}
               className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
                 category === "Women's Wear"
-                  ? 'bg-amazon-dark text-amazon-yellow font-bold'
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              👗 Women's Fashion & Dresses
+              👗 Women's Dresses Only
             </button>
             <button
               onClick={() => setCategory("Kids' Wear")}
               className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
                 category === "Kids' Wear"
-                  ? 'bg-amazon-dark text-amazon-yellow font-bold'
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              👶 Kids' Fashion
+              👶 Kids' Dresses Only
+            </button>
+            <button
+              onClick={() => setCategory('Fashion')}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+                category === 'Fashion'
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              ✨ All Fashion (Clothing + Accessories)
             </button>
           </div>
         )}
@@ -124,10 +133,10 @@ export default function HomePage() {
         {/* Section Title */}
         <div className={`bg-white p-4 ${isFashionCategory ? '' : 'rounded-t-lg'} border border-gray-200 flex items-center justify-between mb-0`}>
           <h1 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-            <span>{category === 'All' ? "Today's Great Deals & Best Sellers" : `${category} Collection`}</span>
+            <span>{getSectionTitle()}</span>
             <span className="text-xs bg-red-600 text-white font-black px-2 py-0.5 rounded">UP TO 50% OFF</span>
           </h1>
-          <span className="text-xs text-gray-500">{products.length} Products Available</span>
+          <span className="text-xs text-gray-500">{products.length} Items Available</span>
         </div>
 
         {/* Product Grid */}
@@ -144,7 +153,7 @@ export default function HomePage() {
           </div>
         ) : products.length === 0 ? (
           <div className="bg-white p-12 text-center border border-t-0 border-gray-200 rounded-b-lg">
-            <p className="text-gray-600 font-semibold text-lg">No products found matching your search.</p>
+            <p className="text-gray-600 font-semibold text-lg">No items found matching your filter.</p>
             <button
               onClick={() => setCategory('All')}
               className="mt-4 btn-amazon-primary text-sm font-bold"
