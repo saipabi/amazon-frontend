@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Header from '../components/Header';
 import SubHeader from '../components/SubHeader';
 import HeroCarousel from '../components/HeroCarousel';
@@ -8,15 +9,31 @@ import ProductCard from '../components/ProductCard';
 import { fetchProducts } from '../lib/api';
 import { Sparkles, Truck, ShieldCheck, RefreshCw, Filter, Shirt } from 'lucide-react';
 
-export default function HomePage() {
-  const [category, setCategory] = useState('All');
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const urlCategory = searchParams?.get('category') || 'All';
+  const urlSearch = searchParams?.get('search') || '';
+
+  const [category, setCategory] = useState(urlCategory);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(urlSearch);
+
+  useEffect(() => {
+    if (urlCategory) {
+      setCategory(urlCategory);
+    }
+  }, [urlCategory]);
+
+  useEffect(() => {
+    if (urlSearch !== search) {
+      setSearch(urlSearch);
+    }
+  }, [urlSearch]);
 
   useEffect(() => {
     loadProducts(category, search);
-  }, [category]);
+  }, [category, search]);
 
   const loadProducts = async (cat, searchTerm) => {
     setLoading(true);
@@ -170,5 +187,13 @@ export default function HomePage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-amazon-bg flex items-center justify-center text-gray-500 font-bold">Loading Amazon Store...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

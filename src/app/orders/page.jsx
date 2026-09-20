@@ -61,9 +61,17 @@ function OrdersContent() {
               <p className="text-sm text-green-800 mt-1">
                 Thank you for shopping on Amazon. Your payment was verified securely via Razorpay.
               </p>
-              <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-green-900 bg-green-100 px-3 py-1.5 rounded w-fit">
-                <ShieldCheck className="w-4 h-4 text-green-700" />
-                <span>Order Reference ID: {orderId || 'ORD_SUCCESS_RAZORPAY'}</span>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/"
+                  className="px-5 py-2.5 bg-amazon-yellow text-amazon-dark font-extrabold text-sm rounded-md shadow hover:bg-yellow-400 transition inline-flex items-center gap-2 cursor-pointer"
+                >
+                  ← Return to Home & Continue Shopping
+                </Link>
+                <div className="flex items-center gap-2 text-xs font-semibold text-green-900 bg-green-100 px-3 py-1.5 rounded">
+                  <ShieldCheck className="w-4 h-4 text-green-700" />
+                  <span>Order Reference ID: {orderId || 'ORD_SUCCESS_RAZORPAY'}</span>
+                </div>
               </div>
             </div>
           </div>
