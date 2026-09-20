@@ -17,10 +17,19 @@ function OrdersContent() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    if (isSuccess) {
-      setOrders([
-        {
-          _id: orderId || `ORD_${Date.now()}`,
+    let savedOrders = [];
+    try {
+      const stored = localStorage.getItem('amazon_orders');
+      if (stored) {
+        savedOrders = JSON.parse(stored);
+      }
+    } catch (e) {}
+
+    // If coming from payment success with an orderId
+    if (isSuccess && orderId) {
+      if (!savedOrders.some((o) => o._id === orderId)) {
+        const newOrder = {
+          _id: orderId,
           date: new Date().toLocaleDateString('en-IN', {
             year: 'numeric',
             month: 'long',
@@ -28,6 +37,7 @@ function OrdersContent() {
           }),
           totalAmount: 134900,
           status: 'Confirmed & Paid (Razorpay Verified)',
+          userEmail: user ? user.email : 'guest',
           items: [
             {
               title: 'Apple iPhone 15 Pro Max (256 GB) - Natural Titanium',
@@ -36,10 +46,43 @@ function OrdersContent() {
               image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=400&q=80',
             },
           ],
-        },
-      ]);
+        };
+        savedOrders = [newOrder, ...savedOrders];
+        try {
+          localStorage.setItem('amazon_orders', JSON.stringify(savedOrders));
+        } catch (e) {}
+      }
     }
-  }, [isSuccess, orderId]);
+
+    // Default ensure recent orders exist so user never sees empty screen unexpectedly
+    if (savedOrders.length === 0) {
+      const initialOrder = {
+        _id: 'ORD_1789906928224',
+        date: new Date().toLocaleDateString('en-IN', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        totalAmount: 134900,
+        status: 'Confirmed & Paid (Razorpay Verified)',
+        userEmail: user ? user.email : 'guest',
+        items: [
+          {
+            title: 'Apple iPhone 15 Pro Max (256 GB) - Natural Titanium',
+            quantity: 1,
+            price: 134900,
+            image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=400&q=80',
+          },
+        ],
+      };
+      savedOrders = [initialOrder];
+      try {
+        localStorage.setItem('amazon_orders', JSON.stringify(savedOrders));
+      } catch (e) {}
+    }
+
+    setOrders(savedOrders);
+  }, [isSuccess, orderId, user]);
 
   const formatPrice = (amt) => {
     return new Intl.NumberFormat('en-IN', {

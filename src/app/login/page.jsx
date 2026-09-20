@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
-import { Lock } from 'lucide-react';
+import { Lock, Sparkles } from 'lucide-react';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams?.get('redirect') || '/';
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,12 +23,17 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      router.push('/');
+      router.push(redirect);
     } catch (err) {
       setError(err.message || 'Login failed. Please check credentials.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFillDemo = () => {
+    setEmail('testrajesh@amazon.com');
+    setPassword('password123');
   };
 
   return (
@@ -40,6 +47,25 @@ export default function LoginPage() {
       {/* Login Box */}
       <div className="w-full max-w-sm bg-white p-6 border border-gray-300 rounded shadow-sm">
         <h1 className="text-2xl font-normal text-gray-900 mb-4">Sign in</h1>
+
+        {/* Quick Demo Fill Banner */}
+        <div className="bg-amber-50 border border-amber-200 rounded p-2.5 mb-4 text-xs">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-gray-800 flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-amazon-orange" /> Quick Demo Test:
+            </span>
+            <button
+              type="button"
+              onClick={handleFillDemo}
+              className="text-xs bg-amazon-yellow text-amazon-dark px-2 py-0.5 rounded font-bold hover:bg-yellow-400 shadow-sm cursor-pointer"
+            >
+              Auto Fill
+            </button>
+          </div>
+          <p className="text-[11px] text-gray-600 mt-1">
+            Email: <b>testrajesh@amazon.com</b> | Pass: <b>password123</b>
+          </p>
+        </div>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded text-xs mb-4 font-medium">
@@ -99,5 +125,13 @@ export default function LoginPage() {
         Create your Amazon account
       </Link>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center text-gray-500 font-bold">Loading Sign in...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

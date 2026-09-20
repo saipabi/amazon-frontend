@@ -92,6 +92,29 @@ export default function RazorpayModal({
               token
             );
 
+            // Save locally for instant persistence in Orders page
+            try {
+              const orderRecord = {
+                _id: response.razorpay_order_id || createdOrder._id || `ORD_${Date.now()}`,
+                date: new Date().toLocaleDateString('en-IN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                }),
+                totalAmount: amount,
+                status: 'Confirmed & Paid (Razorpay Verified)',
+                items: cartItems.map((item) => ({
+                  title: item.title,
+                  quantity: item.quantity,
+                  price: item.price,
+                  image: item.images ? item.images[0] : '',
+                })),
+                shippingAddress,
+              };
+              const pastOrders = JSON.parse(localStorage.getItem('amazon_orders') || '[]');
+              localStorage.setItem('amazon_orders', JSON.stringify([orderRecord, ...pastOrders]));
+            } catch (e) {}
+
             onSuccess(createdOrder);
           } catch (err) {
             setError('Payment verification failed. Please contact support.');
