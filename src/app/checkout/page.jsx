@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
 import RazorpayModal from '../../components/RazorpayModal';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { MapPin, ShieldCheck, Lock } from 'lucide-react';
+import { MapPin, ShieldCheck, Lock, CheckCircle2, Truck, Check } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -17,13 +17,48 @@ export default function CheckoutPage() {
   const [shippingAddress, setShippingAddress] = useState({
     fullName: user ? user.name : 'Rajesh Kumar',
     phone: '9876543210',
-    address: 'Flat 402, Nura Residency, Hi-Tech City',
-    city: 'Hyderabad',
-    postalCode: '500081',
+    address: 'Flat 402, Nura Residency, Anna Nagar',
+    city: 'Chennai',
+    postalCode: '600001',
     country: 'India',
   });
 
-  const [addressSaved, setAddressSaved] = useState(true);
+  const [addressSaved, setAddressSaved] = useState(false);
+
+  useEffect(() => {
+    try {
+      const storedAddr = localStorage.getItem('amazon_user_address');
+      const storedLoc = localStorage.getItem('amazon_delivery_location');
+      let current = { ...shippingAddress };
+
+      if (storedAddr) {
+        current = { ...current, ...JSON.parse(storedAddr) };
+      }
+      if (storedLoc) {
+        const loc = JSON.parse(storedLoc);
+        if (loc.city) current.city = loc.city;
+        if (loc.pincode) current.postalCode = loc.pincode;
+      }
+      if (user && user.name && (!storedAddr || !JSON.parse(storedAddr)?.fullName)) {
+        current.fullName = user.name;
+      }
+      setShippingAddress(current);
+    } catch (e) {}
+  }, [user]);
+
+  const handleSaveAddress = (e) => {
+    if (e) e.preventDefault();
+    try {
+      localStorage.setItem('amazon_user_address', JSON.stringify(shippingAddress));
+      localStorage.setItem(
+        'amazon_delivery_location',
+        JSON.stringify({ city: shippingAddress.city, pincode: shippingAddress.postalCode })
+      );
+      window.dispatchEvent(new Event('amazon_location_changed'));
+      setAddressSaved(true);
+      setTimeout(() => setAddressSaved(false), 3000);
+    } catch (e) {}
+  };
 
   const formatPrice = (amt) => {
     return new Intl.NumberFormat('en-IN', {
@@ -78,9 +113,29 @@ export default function CheckoutPage() {
                 <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-amazon-orange" /> 1. Delivery Address
                 </h3>
+                <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
+                  Doorstep Delivery
+                </span>
               </div>
 
-              <form className="space-y-4 text-xs sm:text-sm">
+              {/* Delivery Estimation Banner */}
+              <div className="bg-blue-50/80 border border-blue-200 rounded-md p-3 mb-4 text-xs text-blue-900 flex items-center gap-2.5">
+                <Truck className="w-5 h-5 text-amazon-orange shrink-0" />
+                <div>
+                  <span className="font-bold">Guaranteed Delivery to {shippingAddress.city || 'your address'}:</span>{' '}
+                  <span className="text-green-800 font-extrabold">FREE Express Delivery by Tomorrow, 9:00 PM</span>
+                  <p className="text-[11px] text-gray-600">Dispatched with Amazon Fulfilled Logistics</p>
+                </div>
+              </div>
+
+              {addressSaved && (
+                <div className="bg-green-50 border border-green-400 text-green-900 p-3 rounded mb-4 flex items-center gap-2 text-xs font-bold animate-fadeIn">
+                  <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
+                  <span>Delivery address updated and confirmed! Products will be delivered to this location.</span>
+                </div>
+              )}
+
+              <form onSubmit={handleSaveAddress} className="space-y-4 text-xs sm:text-sm">
                 <div>
                   <label className="block font-semibold text-gray-700 mb-1">Full Name</label>
                   <input
@@ -107,8 +162,9 @@ export default function CheckoutPage() {
                     <label className="block font-semibold text-gray-700 mb-1">Pincode</label>
                     <input
                       type="text"
+                      maxLength={6}
                       value={shippingAddress.postalCode}
-                      onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
+                      onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value.replace(/\D/g, '') })}
                       className="w-full border border-gray-300 rounded p-2 focus:border-amazon-orange focus:outline-none"
                       required
                     />
@@ -146,6 +202,16 @@ export default function CheckoutPage() {
                       className="w-full border border-gray-200 bg-gray-100 text-gray-500 rounded p-2"
                     />
                   </div>
+                </div>
+
+                <div className="pt-2 flex items-center justify-between">
+                  <button
+                    type="submit"
+                    className="bg-amazon-yellow hover:bg-amazon-orange text-amazon-dark font-extrabold text-xs px-5 py-2.5 rounded shadow-sm border border-[#a88734] transition flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Check className="w-4 h-4" /> Save & Deliver to this Address
+                  </button>
+                  <span className="text-[11px] text-gray-500">Auto-saved on checkout</span>
                 </div>
               </form>
             </div>

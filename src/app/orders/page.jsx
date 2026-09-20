@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
 import { useAuth } from '../../context/AuthContext';
-import { CheckCircle2, PackageCheck, Calendar, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, PackageCheck, Calendar, ShieldCheck, ChevronDown, MapPin } from 'lucide-react';
 import Link from 'next/link';
 
 function OrdersContent() {
@@ -153,11 +153,38 @@ function OrdersContent() {
                       <span className="text-gray-500 block uppercase font-medium">TOTAL</span>
                       <span className="font-bold text-gray-900">{formatPrice(ord.totalAmount)}</span>
                     </div>
-                    <div>
+                    <div className="group relative">
                       <span className="text-gray-500 block uppercase font-medium">SHIP TO</span>
-                      <span className="font-bold text-amazon-blue cursor-pointer">
-                        {user ? user.name : 'Rajesh Kumar'}
+                      <span className="font-bold text-amazon-blue cursor-pointer flex items-center gap-0.5 hover:text-amazon-orange transition">
+                        {ord.shippingAddress?.fullName || (user ? user.name : 'Rajesh Kumar')}
+                        <ChevronDown className="w-3 h-3 text-gray-500 group-hover:text-amazon-orange" />
                       </span>
+                      {/* Shipping Address Popup */}
+                      <div className="hidden group-hover:block absolute left-0 top-full pt-1.5 z-30 min-w-[260px]">
+                        <div className="bg-white border border-gray-300 shadow-xl rounded-md p-3.5 text-xs text-gray-800 animate-fadeIn">
+                          <p className="font-extrabold text-gray-900 border-b pb-1.5 mb-2 flex items-center gap-1.5">
+                            <MapPin className="w-3.5 h-3.5 text-amazon-orange" /> Delivery Address
+                          </p>
+                          <p className="font-bold text-gray-900 text-sm">
+                            {ord.shippingAddress?.fullName || (user ? user.name : 'Rajesh Kumar')}
+                          </p>
+                          <p className="text-gray-700 mt-0.5">
+                            {ord.shippingAddress?.address || 'Flat 402, Nura Residency, Anna Nagar'}
+                          </p>
+                          <p className="text-gray-700 font-medium">
+                            {ord.shippingAddress?.city || 'Chennai'} - {ord.shippingAddress?.postalCode || '600001'}
+                          </p>
+                          <p className="text-gray-500">{ord.shippingAddress?.country || 'India'}</p>
+                          {ord.shippingAddress?.phone && (
+                            <p className="text-gray-600 mt-2 text-[11px] pt-1.5 border-t border-gray-100">
+                              <b>Phone:</b> {ord.shippingAddress.phone}
+                            </p>
+                          )}
+                          <div className="mt-2 text-[10px] font-bold text-green-700 bg-green-50 px-2 py-1 rounded flex items-center gap-1">
+                            ✓ Dispatched for Doorstep Delivery
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 

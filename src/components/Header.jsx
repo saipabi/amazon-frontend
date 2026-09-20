@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, ShoppingCart, MapPin, User, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import DeliveryLocationModal from './DeliveryLocationModal';
 
 export default function Header({ selectedCategory = 'All', onCategoryChange }) {
   const router = useRouter();
@@ -13,6 +14,25 @@ export default function Header({ selectedCategory = 'All', onCategoryChange }) {
   const { user, logout } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState(selectedCategory);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [deliveryLocation, setDeliveryLocation] = useState({ city: 'India', pincode: '' });
+
+  useEffect(() => {
+    const loadLocation = () => {
+      try {
+        const stored = localStorage.getItem('amazon_delivery_location');
+        if (stored) {
+          setDeliveryLocation(JSON.parse(stored));
+        } else {
+          setDeliveryLocation({ city: 'India', pincode: 'Update location' });
+        }
+      } catch (e) {}
+    };
+
+    loadLocation();
+    window.addEventListener('amazon_location_changed', loadLocation);
+    return () => window.removeEventListener('amazon_location_changed', loadLocation);
+  }, []);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -32,11 +52,19 @@ export default function Header({ selectedCategory = 'All', onCategoryChange }) {
         </Link>
 
         {/* Deliver To Widget */}
-        <div className="hidden md:flex items-center gap-1 p-2 rounded hover:outline hover:outline-1 hover:outline-white cursor-pointer text-xs">
-          <MapPin className="w-5 h-5 text-gray-300 self-end mb-0.5" />
+        <div
+          onClick={() => setIsLocationModalOpen(true)}
+          className="hidden md:flex items-center gap-1.5 p-2 rounded hover:outline hover:outline-1 hover:outline-white cursor-pointer text-xs group transition"
+          title="Click to choose delivery location"
+        >
+          <MapPin className="w-5 h-5 text-gray-300 group-hover:text-amazon-yellow transition self-end mb-0.5" />
           <div className="flex flex-col">
-            <span className="text-gray-400 font-normal">Delivering to India</span>
-            <span className="font-bold text-white leading-tight">Update location</span>
+            <span className="text-gray-400 font-normal truncate max-w-[130px]">
+              Delivering to {deliveryLocation.city || 'India'}
+            </span>
+            <span className="font-bold text-white leading-tight">
+              {deliveryLocation.pincode || 'Update location'}
+            </span>
           </div>
         </div>
 
@@ -121,6 +149,13 @@ export default function Header({ selectedCategory = 'All', onCategoryChange }) {
           <span className="font-bold text-sm hidden md:inline self-end mb-1">Cart</span>
         </Link>
       </div>
+
+      {/* Choose Delivery Location Modal */}
+      <DeliveryLocationModal
+        isOpen={isLocationModalOpen}
+        onClose={() => setIsLocationModalOpen(false)}
+        onLocationSelect={(loc) => setDeliveryLocation(loc)}
+      />
     </header>
   );
 }
