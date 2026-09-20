@@ -18,6 +18,11 @@ function HomeContent() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(urlSearch);
+  const [minDiscount, setMinDiscount] = useState(0);
+
+  const displayedProducts = minDiscount > 0
+    ? products.filter((p) => (p.discountPercentage || 0) >= minDiscount)
+    : products;
 
   useEffect(() => {
     if (urlCategory) {
@@ -104,15 +109,41 @@ function HomeContent() {
           </div>
         </div>
 
-        {/* Fashion Sub-Category Quick Filter Pills */}
-        {isFashionCategory && (
-          <div className="bg-white p-3 rounded-t-lg border border-b-0 border-gray-200 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold text-gray-700 flex items-center gap-1 mr-2">
+        {/* Fashion & Department Sub-Category Quick Filter Bar */}
+        <div className="bg-white p-3 rounded-t-lg border border-b-0 border-gray-200 flex flex-wrap items-center justify-between gap-3">
+          {/* Department Selector & Quick Pills */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold text-gray-700 flex items-center gap-1 mr-1">
               <Shirt className="w-4 h-4 text-amazon-orange" /> Select Department:
             </span>
+
+            {/* Interactive Department Select Dropdown */}
+            <select
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setMinDiscount(0);
+              }}
+              className="bg-gray-50 border border-gray-300 text-xs font-bold rounded px-2.5 py-1 text-gray-800 focus:outline-none focus:border-amazon-orange cursor-pointer hover:bg-gray-100 shadow-sm"
+            >
+              <option value="All">All Departments (Today's Deals)</option>
+              <option value="Men's Wear">👔 Men's Clothing & Dresses</option>
+              <option value="Women's Wear">👗 Women's Clothing & Dresses</option>
+              <option value="Kids' Wear">👶 Kids' Clothing & Dresses</option>
+              <option value="Fashion">✨ All Fashion</option>
+              <option value="Electronics">💻 Electronics & Audio</option>
+              <option value="Mobiles">📱 Mobiles & Smartphones</option>
+              <option value="Home">🏠 Home & Kitchen</option>
+              <option value="Books">📚 Books & Kindle</option>
+            </select>
+
+            {/* Quick Pills for Current Category */}
             <button
-              onClick={() => setCategory("Men's Wear")}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+              onClick={() => {
+                setCategory("Men's Wear");
+                setMinDiscount(0);
+              }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
                 category === "Men's Wear"
                   ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -121,8 +152,11 @@ function HomeContent() {
               👔 Men's Dresses Only
             </button>
             <button
-              onClick={() => setCategory("Women's Wear")}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+              onClick={() => {
+                setCategory("Women's Wear");
+                setMinDiscount(0);
+              }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
                 category === "Women's Wear"
                   ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -131,8 +165,11 @@ function HomeContent() {
               👗 Women's Dresses Only
             </button>
             <button
-              onClick={() => setCategory("Kids' Wear")}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+              onClick={() => {
+                setCategory("Kids' Wear");
+                setMinDiscount(0);
+              }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
                 category === "Kids' Wear"
                   ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -141,25 +178,88 @@ function HomeContent() {
               👶 Kids' Dresses Only
             </button>
             <button
-              onClick={() => setCategory('Fashion')}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+              onClick={() => {
+                setCategory('Fashion');
+                setMinDiscount(0);
+              }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
                 category === 'Fashion'
                   ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              ✨ All Fashion (Clothing + Accessories)
+              ✨ All Fashion
             </button>
           </div>
-        )}
 
-        {/* Section Title */}
-        <div className={`bg-white p-4 ${isFashionCategory ? '' : 'rounded-t-lg'} border border-gray-200 flex items-center justify-between mb-0`}>
-          <h1 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-            <span>{getSectionTitle()}</span>
-            <span className="text-xs bg-red-600 text-white font-black px-2 py-0.5 rounded">UP TO 50% OFF</span>
-          </h1>
-          <span className="text-xs text-gray-500">{products.length} Items Available</span>
+          {/* Discount Quick Filter Pills */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-xs text-gray-500 font-bold flex items-center gap-1">
+              <Filter className="w-3.5 h-3.5 text-amazon-orange" /> Discount:
+            </span>
+            <button
+              onClick={() => setMinDiscount(0)}
+              className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                minDiscount === 0
+                  ? 'bg-gray-800 text-white shadow'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setMinDiscount((prev) => (prev === 30 ? 0 : 30))}
+              className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border ${
+                minDiscount === 30
+                  ? 'bg-red-600 text-white border-red-600 shadow'
+                  : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+              }`}
+            >
+              🔥 30%+ OFF
+            </button>
+            <button
+              onClick={() => setMinDiscount((prev) => (prev === 40 ? 0 : 40))}
+              className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border ${
+                minDiscount === 40
+                  ? 'bg-red-600 text-white border-red-600 shadow'
+                  : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+              }`}
+            >
+              ⚡ 40%+ OFF
+            </button>
+            <button
+              onClick={() => setMinDiscount((prev) => (prev === 50 ? 0 : 50))}
+              className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border ${
+                minDiscount === 50
+                  ? 'bg-red-600 text-white border-red-600 shadow'
+                  : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+              }`}
+            >
+              💥 50% OFF
+            </button>
+          </div>
+        </div>
+
+        {/* Section Title with Interactive UP TO 50% OFF Button */}
+        <div className="bg-white p-4 border border-gray-200 flex items-center justify-between mb-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-lg sm:text-xl font-bold text-gray-900">
+              {getSectionTitle()}
+            </h1>
+            <button
+              onClick={() => setMinDiscount((prev) => (prev === 50 ? 0 : 50))}
+              className={`text-xs font-black px-2.5 py-1 rounded transition cursor-pointer flex items-center gap-1.5 shadow-sm ${
+                minDiscount === 50
+                  ? 'bg-red-800 text-white ring-2 ring-red-400'
+                  : 'bg-red-600 text-white hover:bg-red-700'
+              }`}
+              title="Click to toggle 50% discount deals"
+            >
+              <span>{minDiscount === 50 ? '✓ 50% OFF APPLIED' : 'UP TO 50% OFF'}</span>
+              {minDiscount === 50 && <span className="bg-red-950 text-[10px] px-1 rounded">Reset ✕</span>}
+            </button>
+          </div>
+          <span className="text-xs text-gray-500 font-semibold">{displayedProducts.length} Items Available</span>
         </div>
 
         {/* Product Grid */}
@@ -174,19 +274,34 @@ function HomeContent() {
               </div>
             ))}
           </div>
-        ) : products.length === 0 ? (
+        ) : displayedProducts.length === 0 ? (
           <div className="bg-white p-12 text-center border border-t-0 border-gray-200 rounded-b-lg">
-            <p className="text-gray-600 font-semibold text-lg">No items found matching your filter.</p>
+            <p className="text-gray-600 font-semibold text-lg">
+              {minDiscount > 0
+                ? `No items with ${minDiscount}%+ discount found in this department.`
+                : 'No items found matching your filter.'}
+            </p>
+            {minDiscount > 0 && (
+              <button
+                onClick={() => setMinDiscount(0)}
+                className="mt-4 px-4 py-2 bg-amazon-yellow text-amazon-dark font-bold text-xs rounded shadow hover:bg-yellow-400 transition"
+              >
+                Clear Discount Filter (Show All Items)
+              </button>
+            )}
             <button
-              onClick={() => setCategory('All')}
-              className="mt-4 btn-amazon-primary text-sm font-bold"
+              onClick={() => {
+                setCategory('All');
+                setMinDiscount(0);
+              }}
+              className="mt-4 ml-2 btn-amazon-primary text-sm font-bold"
             >
               Browse All Categories
             </button>
           </div>
         ) : (
           <div className="bg-white p-4 border border-t-0 border-gray-200 rounded-b-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {displayedProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
