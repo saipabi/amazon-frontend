@@ -37,7 +37,13 @@ function HomeContent() {
 
   const loadProducts = async (cat, searchTerm) => {
     setLoading(true);
-    const data = await fetchProducts(cat, searchTerm);
+    let data = await fetchProducts(cat, searchTerm);
+
+    // For Today's Deals, showcase the biggest discount items across all categories (Fashion, Mobiles, Electronics)
+    if (cat === 'All' && !searchTerm && Array.isArray(data)) {
+      data = [...data].sort((a, b) => (b.discountPercentage || 0) - (a.discountPercentage || 0));
+    }
+
     setProducts(data);
     setLoading(false);
   };
