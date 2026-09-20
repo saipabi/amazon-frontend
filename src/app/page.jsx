@@ -7,7 +7,23 @@ import SubHeader from '../components/SubHeader';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard from '../components/ProductCard';
 import { fetchProducts } from '../lib/api';
-import { Sparkles, Truck, ShieldCheck, RefreshCw, Filter, Shirt } from 'lucide-react';
+import {
+  Sparkles,
+  Truck,
+  ShieldCheck,
+  RefreshCw,
+  Filter,
+  Shirt,
+  X,
+  CheckCircle2,
+  Star,
+  Lock,
+  PackageCheck,
+  ShieldAlert,
+  CreditCard,
+  RotateCcw,
+} from 'lucide-react';
+import Link from 'next/link';
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -19,10 +35,22 @@ function HomeContent() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(urlSearch);
   const [minDiscount, setMinDiscount] = useState(0);
+  const [primeOnly, setPrimeOnly] = useState(false);
+  const [topRatedOnly, setTopRatedOnly] = useState(false);
+  const [securityModalOpen, setSecurityModalOpen] = useState(false);
+  const [returnsModalOpen, setReturnsModalOpen] = useState(false);
 
-  const displayedProducts = minDiscount > 0
-    ? products.filter((p) => (p.discountPercentage || 0) >= minDiscount)
-    : products;
+  // Multi-dimensional active filters
+  let displayedProducts = products;
+  if (minDiscount > 0) {
+    displayedProducts = displayedProducts.filter((p) => (p.discountPercentage || 0) >= minDiscount);
+  }
+  if (primeOnly) {
+    displayedProducts = displayedProducts.filter((p) => p.isPrime === true);
+  }
+  if (topRatedOnly) {
+    displayedProducts = displayedProducts.filter((p) => (p.rating || 0) >= 4.7);
+  }
 
   useEffect(() => {
     if (urlCategory) {
@@ -74,40 +102,123 @@ function HomeContent() {
 
       {/* Main Content Area */}
       <div className="max-w-[1500px] mx-auto px-4 -mt-16 sm:-mt-24 md:-mt-32 relative z-20 pb-12">
-        {/* Amazon Value Props Bar */}
+        {/* Amazon Value Props Bar - 100% Fully Interactive */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3 border border-gray-200">
-            <Truck className="w-8 h-8 text-amazon-orange" />
-            <div>
-              <p className="font-bold text-xs sm:text-sm text-gray-900">Fast & Free Shipping</p>
-              <p className="text-xs text-gray-500">On all Prime eligible items</p>
+          {/* 1. Fast & Free Shipping (Prime Filter Toggle) */}
+          <div
+            onClick={() => setPrimeOnly((prev) => !prev)}
+            className={`p-4 rounded-lg shadow-sm flex items-center gap-3 border transition cursor-pointer hover:shadow-md hover:-translate-y-0.5 select-none ${
+              primeOnly
+                ? 'bg-amber-50 border-amazon-orange ring-2 ring-amazon-orange shadow-md'
+                : 'bg-white border-gray-200 hover:border-amazon-orange'
+            }`}
+          >
+            <Truck className="w-8 h-8 text-amazon-orange shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-1">
+                <p className="font-bold text-xs sm:text-sm text-gray-900 truncate">Fast & Free Shipping</p>
+                {primeOnly && <span className="text-[10px] bg-amazon-orange text-white px-1.5 py-0.5 rounded font-bold">Active</span>}
+              </div>
+              <p className="text-xs text-gray-500">
+                {primeOnly ? '✓ Prime Items Only (Click to reset)' : 'Click to filter Prime items'}
+              </p>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3 border border-gray-200">
-            <ShieldCheck className="w-8 h-8 text-amazon-orange" />
-            <div>
-              <p className="font-bold text-xs sm:text-sm text-gray-900">Razorpay Secured</p>
-              <p className="text-xs text-gray-500">100% Safe Payments</p>
+          {/* 2. Razorpay Secured (Security Modal Trigger) */}
+          <div
+            onClick={() => setSecurityModalOpen(true)}
+            className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3 border border-gray-200 transition cursor-pointer hover:border-amazon-orange hover:shadow-md hover:-translate-y-0.5 select-none"
+          >
+            <ShieldCheck className="w-8 h-8 text-green-600 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-1">
+                <p className="font-bold text-xs sm:text-sm text-gray-900 truncate">Razorpay Secured</p>
+                <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded font-bold">100% Safe</span>
+              </div>
+              <p className="text-xs text-gray-500">Click for security details</p>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3 border border-gray-200">
-            <RefreshCw className="w-8 h-8 text-amazon-orange" />
-            <div>
-              <p className="font-bold text-xs sm:text-sm text-gray-900">Easy Returns</p>
-              <p className="text-xs text-gray-500">7-Day Replacement Guarantee</p>
+          {/* 3. Easy Returns (Returns Policy Modal Trigger) */}
+          <div
+            onClick={() => setReturnsModalOpen(true)}
+            className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3 border border-gray-200 transition cursor-pointer hover:border-amazon-orange hover:shadow-md hover:-translate-y-0.5 select-none"
+          >
+            <RefreshCw className="w-8 h-8 text-amazon-orange shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-1">
+                <p className="font-bold text-xs sm:text-sm text-gray-900 truncate">Easy Returns</p>
+                <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">7-Day</span>
+              </div>
+              <p className="text-xs text-gray-500">Click for policy & orders</p>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3 border border-gray-200">
-            <Sparkles className="w-8 h-8 text-amazon-orange" />
-            <div>
-              <p className="font-bold text-xs sm:text-sm text-gray-900">Clear HD Quality</p>
-              <p className="text-xs text-gray-500">Original Verified Products</p>
+          {/* 4. Clear HD Quality (Top Rated 4.7+ ⭐ Filter Toggle) */}
+          <div
+            onClick={() => setTopRatedOnly((prev) => !prev)}
+            className={`p-4 rounded-lg shadow-sm flex items-center gap-3 border transition cursor-pointer hover:shadow-md hover:-translate-y-0.5 select-none ${
+              topRatedOnly
+                ? 'bg-amber-50 border-amazon-orange ring-2 ring-amazon-orange shadow-md'
+                : 'bg-white border-gray-200 hover:border-amazon-orange'
+            }`}
+          >
+            <Sparkles className="w-8 h-8 text-amazon-orange shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-1">
+                <p className="font-bold text-xs sm:text-sm text-gray-900 truncate">Clear HD Quality</p>
+                {topRatedOnly && <span className="text-[10px] bg-amazon-orange text-white px-1.5 py-0.5 rounded font-bold">4.7+ ⭐</span>}
+              </div>
+              <p className="text-xs text-gray-500">
+                {topRatedOnly ? '✓ 4.7+ Rated Only (Click to reset)' : 'Click to filter top verified'}
+              </p>
             </div>
           </div>
         </div>
+
+        {/* Active Filter Badges Bar (shown if any card filter is active) */}
+        {(primeOnly || topRatedOnly || minDiscount > 0) && (
+          <div className="bg-amber-50 border border-amber-300 rounded-lg p-2.5 mb-4 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-bold text-gray-800">Active Filters:</span>
+              {primeOnly && (
+                <span
+                  onClick={() => setPrimeOnly(false)}
+                  className="bg-white border border-gray-300 text-gray-800 px-2.5 py-1 rounded-full font-bold flex items-center gap-1 cursor-pointer hover:bg-gray-100 shadow-sm"
+                >
+                  <Truck className="w-3.5 h-3.5 text-amazon-orange" /> Prime Only <X className="w-3 h-3" />
+                </span>
+              )}
+              {topRatedOnly && (
+                <span
+                  onClick={() => setTopRatedOnly(false)}
+                  className="bg-white border border-gray-300 text-gray-800 px-2.5 py-1 rounded-full font-bold flex items-center gap-1 cursor-pointer hover:bg-gray-100 shadow-sm"
+                >
+                  <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" /> 4.7+ Stars <X className="w-3 h-3" />
+                </span>
+              )}
+              {minDiscount > 0 && (
+                <span
+                  onClick={() => setMinDiscount(0)}
+                  className="bg-white border border-gray-300 text-gray-800 px-2.5 py-1 rounded-full font-bold flex items-center gap-1 cursor-pointer hover:bg-gray-100 shadow-sm"
+                >
+                  🔥 {minDiscount}%+ Discount <X className="w-3 h-3" />
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => {
+                setPrimeOnly(false);
+                setTopRatedOnly(false);
+                setMinDiscount(0);
+              }}
+              className="text-amazon-blue hover:underline font-bold cursor-pointer"
+            >
+              Clear All Filters
+            </button>
+          </div>
+        )}
 
         {/* Fashion & Department Sub-Category Quick Filter Bar */}
         <div className="bg-white p-3 rounded-t-lg border border-b-0 border-gray-200 flex flex-wrap items-center justify-between gap-3">
@@ -307,6 +418,143 @@ function HomeContent() {
           </div>
         )}
       </div>
+
+      {/* Razorpay Security Modal */}
+      {securityModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            onClick={() => setSecurityModalOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+          />
+          <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full p-6 z-10 border border-gray-200 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between border-b pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-6 h-6 text-green-600" />
+                <h3 className="font-extrabold text-lg text-gray-900">Razorpay Secured</h3>
+              </div>
+              <button
+                onClick={() => setSecurityModalOpen(false)}
+                className="text-gray-400 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs text-gray-700">
+              <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                <Lock className="w-5 h-5 text-green-700 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-green-950">256-Bit SSL Bank-Grade Encryption</p>
+                  <p className="text-green-800 mt-0.5">
+                    All payment transactions are encrypted end-to-end. Your card and banking credentials are never stored.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <CreditCard className="w-5 h-5 text-amazon-orange shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-gray-900">Supported Payment Methods</p>
+                  <p className="text-gray-600 mt-0.5">
+                    UPI (Google Pay, PhonePe, Paytm, BHIM), RuPay, Visa, MasterCard, and Netbanking across 50+ banks.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-gray-900">RBI Authorized & PCI-DSS Compliant</p>
+                  <p className="text-gray-600 mt-0.5">
+                    Operating on certified Razorpay Payment Gateway infrastructure with HMAC SHA256 signature verification.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setSecurityModalOpen(false)}
+                className="w-full py-2.5 bg-amazon-dark text-amazon-yellow font-bold text-xs rounded-lg hover:bg-gray-800 shadow transition"
+              >
+                Close & Continue Shopping
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Easy Returns Policy Modal */}
+      {returnsModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            onClick={() => setReturnsModalOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+          />
+          <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full p-6 z-10 border border-gray-200 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between border-b pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <RefreshCw className="w-6 h-6 text-amazon-orange" />
+                <h3 className="font-extrabold text-lg text-gray-900">7-Day Easy Returns</h3>
+              </div>
+              <button
+                onClick={() => setReturnsModalOpen(false)}
+                className="text-gray-400 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs text-gray-700">
+              <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                <RotateCcw className="w-5 h-5 text-amber-800 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-amber-950">7-Day Replacement Guarantee</p>
+                  <p className="text-amber-900 mt-0.5">
+                    If an item is damaged, defective, or different from described, you can request a replacement or return within 7 days.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <Truck className="w-5 h-5 text-amazon-orange shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-gray-900">Free Doorstep Pickup</p>
+                  <p className="text-gray-600 mt-0.5">
+                    Our Amazon courier executive will collect the item from your delivery doorstep at zero cost.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <PackageCheck className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-gray-900">Instant Refund Verification</p>
+                  <p className="text-gray-600 mt-0.5">
+                    Refunds are initiated directly to your Razorpay/original bank source upon item inspection.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-2">
+              <Link
+                href="/orders"
+                onClick={() => setReturnsModalOpen(false)}
+                className="w-full py-2.5 bg-amazon-yellow text-amazon-dark font-extrabold text-xs rounded-lg hover:bg-yellow-400 shadow text-center transition"
+              >
+                View Your Orders & Request Return →
+              </Link>
+              <button
+                onClick={() => setReturnsModalOpen(false)}
+                className="w-full py-2 bg-gray-100 text-gray-700 font-bold text-xs rounded-lg hover:bg-gray-200 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
