@@ -37,6 +37,12 @@ export default function RazorpayModal({
       // 1. Create order on backend API
       const orderData = await createRazorpayOrderApi(amount);
 
+      // If backend generated mock order, fallback gracefully without Razorpay SDK error
+      if (orderData.isMock) {
+        await handleTestPaymentFallback(orderData);
+        return;
+      }
+
       // 2. Load Razorpay script
       const scriptLoaded = await loadRazorpayScript();
 
