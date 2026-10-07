@@ -100,27 +100,27 @@ function HomeContent() {
       {/* Hero Banner Section */}
       <HeroCarousel />
 
-      {/* Main Content Area */}
-      <div className="max-w-[1500px] mx-auto px-4 -mt-16 sm:-mt-24 md:-mt-32 relative z-20 pb-12">
-        {/* Amazon Value Props Bar - 100% Fully Interactive */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      {/* Main Content Area with clear spacing so banner text, indicators and cards never touch or hide each other */}
+      <div className="max-w-[1500px] mx-auto px-3 sm:px-4 mt-2.5 sm:-mt-6 md:-mt-12 relative z-20 pb-12">
+        {/* Amazon Value Props Bar - 100% Fully Interactive & Responsive */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-6">
           {/* 1. Fast & Free Shipping (Prime Filter Toggle) */}
           <div
             onClick={() => setPrimeOnly((prev) => !prev)}
-            className={`p-4 rounded-lg shadow-sm flex items-center gap-3 border transition cursor-pointer hover:shadow-md hover:-translate-y-0.5 select-none ${
+            className={`p-3 sm:p-4 rounded-lg shadow-sm flex items-center gap-2 sm:gap-3 border transition cursor-pointer hover:shadow-md hover:-translate-y-0.5 select-none ${
               primeOnly
                 ? 'bg-amber-50 border-amazon-orange ring-2 ring-amazon-orange shadow-md'
                 : 'bg-white border-gray-200 hover:border-amazon-orange'
             }`}
           >
-            <Truck className="w-8 h-8 text-amazon-orange shrink-0" />
+            <Truck className="w-6 h-6 sm:w-8 sm:h-8 text-amazon-orange shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-1">
-                <p className="font-bold text-xs sm:text-sm text-gray-900 truncate">Fast & Free Shipping</p>
-                {primeOnly && <span className="text-[10px] bg-amazon-orange text-white px-1.5 py-0.5 rounded font-bold">Active</span>}
+                <p className="font-bold text-xs sm:text-sm text-gray-900 leading-tight">Fast & Free Shipping</p>
+                {primeOnly && <span className="text-[9px] sm:text-[10px] bg-amazon-orange text-white px-1 sm:px-1.5 py-0.5 rounded font-bold shrink-0">Active</span>}
               </div>
-              <p className="text-xs text-gray-500">
-                {primeOnly ? '✓ Prime Items Only (Click to reset)' : 'Click to filter Prime items'}
+              <p className="text-[11px] sm:text-xs text-gray-500 leading-tight mt-0.5 line-clamp-1">
+                {primeOnly ? '✓ Prime Only (Reset)' : 'Filter Prime items'}
               </p>
             </div>
           </div>
@@ -128,50 +128,50 @@ function HomeContent() {
           {/* 2. Razorpay Secured (Security Modal Trigger) */}
           <div
             onClick={() => setSecurityModalOpen(true)}
-            className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3 border border-gray-200 transition cursor-pointer hover:border-amazon-orange hover:shadow-md hover:-translate-y-0.5 select-none"
+            className="bg-white p-3 sm:p-4 rounded-lg shadow-sm flex items-center gap-2 sm:gap-3 border border-gray-200 transition cursor-pointer hover:border-amazon-orange hover:shadow-md hover:-translate-y-0.5 select-none"
           >
-            <ShieldCheck className="w-8 h-8 text-green-600 shrink-0" />
+            <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-1">
-                <p className="font-bold text-xs sm:text-sm text-gray-900 truncate">Razorpay Secured</p>
-                <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded font-bold">100% Safe</span>
+                <p className="font-bold text-xs sm:text-sm text-gray-900 leading-tight">Razorpay Secured</p>
+                <span className="text-[9px] sm:text-[10px] bg-green-100 text-green-800 px-1 sm:px-1.5 py-0.5 rounded font-bold shrink-0">100% Safe</span>
               </div>
-              <p className="text-xs text-gray-500">Click for security details</p>
+              <p className="text-[11px] sm:text-xs text-gray-500 leading-tight mt-0.5 line-clamp-1">Bank-grade security</p>
             </div>
           </div>
 
           {/* 3. Easy Returns (Returns Policy Modal Trigger) */}
           <div
             onClick={() => setReturnsModalOpen(true)}
-            className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-3 border border-gray-200 transition cursor-pointer hover:border-amazon-orange hover:shadow-md hover:-translate-y-0.5 select-none"
+            className="bg-white p-3 sm:p-4 rounded-lg shadow-sm flex items-center gap-2 sm:gap-3 border border-gray-200 transition cursor-pointer hover:border-amazon-orange hover:shadow-md hover:-translate-y-0.5 select-none"
           >
-            <RefreshCw className="w-8 h-8 text-amazon-orange shrink-0" />
+            <RefreshCw className="w-6 h-6 sm:w-8 sm:h-8 text-amazon-orange shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-1">
-                <p className="font-bold text-xs sm:text-sm text-gray-900 truncate">Easy Returns</p>
-                <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">7-Day</span>
+                <p className="font-bold text-xs sm:text-sm text-gray-900 leading-tight">Easy Returns</p>
+                <span className="text-[9px] sm:text-[10px] bg-amber-100 text-amber-800 px-1 sm:px-1.5 py-0.5 rounded font-bold shrink-0">7-Day</span>
               </div>
-              <p className="text-xs text-gray-500">Click for policy & orders</p>
+              <p className="text-[11px] sm:text-xs text-gray-500 leading-tight mt-0.5 line-clamp-1">7-Day easy return</p>
             </div>
           </div>
 
           {/* 4. Clear HD Quality (Top Rated 4.7+ ⭐ Filter Toggle) */}
           <div
             onClick={() => setTopRatedOnly((prev) => !prev)}
-            className={`p-4 rounded-lg shadow-sm flex items-center gap-3 border transition cursor-pointer hover:shadow-md hover:-translate-y-0.5 select-none ${
+            className={`p-3 sm:p-4 rounded-lg shadow-sm flex items-center gap-2 sm:gap-3 border transition cursor-pointer hover:shadow-md hover:-translate-y-0.5 select-none ${
               topRatedOnly
                 ? 'bg-amber-50 border-amazon-orange ring-2 ring-amazon-orange shadow-md'
                 : 'bg-white border-gray-200 hover:border-amazon-orange'
             }`}
           >
-            <Sparkles className="w-8 h-8 text-amazon-orange shrink-0" />
+            <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-amazon-orange shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-1">
-                <p className="font-bold text-xs sm:text-sm text-gray-900 truncate">Clear HD Quality</p>
-                {topRatedOnly && <span className="text-[10px] bg-amazon-orange text-white px-1.5 py-0.5 rounded font-bold">4.7+ ⭐</span>}
+                <p className="font-bold text-xs sm:text-sm text-gray-900 leading-tight">Clear HD Quality</p>
+                {topRatedOnly && <span className="text-[9px] sm:text-[10px] bg-amazon-orange text-white px-1 sm:px-1.5 py-0.5 rounded font-bold shrink-0">4.7+ ⭐</span>}
               </div>
-              <p className="text-xs text-gray-500">
-                {topRatedOnly ? '✓ 4.7+ Rated Only (Click to reset)' : 'Click to filter top verified'}
+              <p className="text-[11px] sm:text-xs text-gray-500 leading-tight mt-0.5 line-clamp-1">
+                {topRatedOnly ? '✓ 4.7+ Only (Reset)' : 'Top verified items'}
               </p>
             </div>
           </div>
@@ -221,40 +221,89 @@ function HomeContent() {
         )}
 
         {/* Fashion & Department Sub-Category Quick Filter Bar */}
-        <div className="bg-white p-3 rounded-t-lg border border-b-0 border-gray-200 flex flex-wrap items-center justify-between gap-3">
-          {/* Department Selector & Quick Pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold text-gray-700 flex items-center gap-1 mr-1">
-              <Shirt className="w-4 h-4 text-amazon-orange" /> Select Department:
-            </span>
+        <div className="bg-white p-3 rounded-t-lg border border-b-0 border-gray-200 flex flex-col gap-2.5">
+          {/* Top Row: Department Selector Dropdown & Discount Quick Pills */}
+          <div className="flex flex-wrap items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-bold text-gray-700 flex items-center gap-1">
+                <Shirt className="w-4 h-4 text-amazon-orange" /> Department:
+              </span>
+              <select
+                value={category}
+                onChange={(e) => {
+                  setCategory(e.target.value);
+                  setMinDiscount(0);
+                }}
+                className="bg-gray-50 border border-gray-300 text-xs font-bold rounded px-2.5 py-1 text-gray-800 focus:outline-none focus:border-amazon-orange cursor-pointer hover:bg-gray-100 shadow-sm"
+              >
+                <option value="All">All Departments (Today's Deals)</option>
+                <option value="Men's Wear">👔 Men's Clothing & Dresses</option>
+                <option value="Women's Wear">👗 Women's Clothing & Dresses</option>
+                <option value="Kids' Wear">👶 Kids' Clothing & Dresses</option>
+                <option value="Fashion">✨ All Fashion</option>
+                <option value="Electronics">💻 Electronics & Audio</option>
+                <option value="Mobiles">📱 Mobiles & Smartphones</option>
+                <option value="Home">🏠 Home & Kitchen</option>
+                <option value="Books">📚 Books & Kindle</option>
+              </select>
+            </div>
 
-            {/* Interactive Department Select Dropdown */}
-            <select
-              value={category}
-              onChange={(e) => {
-                setCategory(e.target.value);
-                setMinDiscount(0);
-              }}
-              className="bg-gray-50 border border-gray-300 text-xs font-bold rounded px-2.5 py-1 text-gray-800 focus:outline-none focus:border-amazon-orange cursor-pointer hover:bg-gray-100 shadow-sm"
-            >
-              <option value="All">All Departments (Today's Deals)</option>
-              <option value="Men's Wear">👔 Men's Clothing & Dresses</option>
-              <option value="Women's Wear">👗 Women's Clothing & Dresses</option>
-              <option value="Kids' Wear">👶 Kids' Clothing & Dresses</option>
-              <option value="Fashion">✨ All Fashion</option>
-              <option value="Electronics">💻 Electronics & Audio</option>
-              <option value="Mobiles">📱 Mobiles & Smartphones</option>
-              <option value="Home">🏠 Home & Kitchen</option>
-              <option value="Books">📚 Books & Kindle</option>
-            </select>
+            {/* Discount Quick Filter Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap py-0.5">
+              <span className="text-xs text-gray-500 font-bold flex items-center gap-1 shrink-0">
+                <Filter className="w-3.5 h-3.5 text-amazon-orange" /> Deals:
+              </span>
+              <button
+                onClick={() => setMinDiscount(0)}
+                className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer shrink-0 ${
+                  minDiscount === 0
+                    ? 'bg-gray-800 text-white shadow'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setMinDiscount((prev) => (prev === 30 ? 0 : 30))}
+                className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border shrink-0 ${
+                  minDiscount === 30
+                    ? 'bg-red-600 text-white border-red-600 shadow'
+                    : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+                }`}
+              >
+                🔥 30%+ OFF
+              </button>
+              <button
+                onClick={() => setMinDiscount((prev) => (prev === 40 ? 0 : 40))}
+                className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border shrink-0 ${
+                  minDiscount === 40
+                    ? 'bg-red-600 text-white border-red-600 shadow'
+                    : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+                }`}
+              >
+                ⚡ 40%+ OFF
+              </button>
+              <button
+                onClick={() => setMinDiscount((prev) => (prev === 50 ? 0 : 50))}
+                className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border shrink-0 ${
+                  minDiscount === 50
+                    ? 'bg-red-600 text-white border-red-600 shadow'
+                    : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+                }`}
+              >
+                💥 50% OFF
+              </button>
+            </div>
+          </div>
 
-            {/* Quick Pills for Current Category */}
+          {/* Bottom Row: Quick Category Pills with Horizontal Scroll on Mobile */}
+          <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1 pt-0.5">
             <button
               onClick={() => {
                 setCategory("Men's Wear");
                 setMinDiscount(0);
               }}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer shrink-0 ${
                 category === "Men's Wear"
                   ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -267,7 +316,7 @@ function HomeContent() {
                 setCategory("Women's Wear");
                 setMinDiscount(0);
               }}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer shrink-0 ${
                 category === "Women's Wear"
                   ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -280,7 +329,7 @@ function HomeContent() {
                 setCategory("Kids' Wear");
                 setMinDiscount(0);
               }}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer shrink-0 ${
                 category === "Kids' Wear"
                   ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -293,7 +342,7 @@ function HomeContent() {
                 setCategory('Fashion');
                 setMinDiscount(0);
               }}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer shrink-0 ${
                 category === 'Fashion'
                   ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -301,52 +350,31 @@ function HomeContent() {
             >
               ✨ All Fashion
             </button>
-          </div>
-
-          {/* Discount Quick Filter Pills */}
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-xs text-gray-500 font-bold flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5 text-amazon-orange" /> Discount:
-            </span>
             <button
-              onClick={() => setMinDiscount(0)}
-              className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
-                minDiscount === 0
-                  ? 'bg-gray-800 text-white shadow'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              onClick={() => {
+                setCategory('Mobiles');
+                setMinDiscount(0);
+              }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer shrink-0 ${
+                category === 'Mobiles'
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              All
+              📱 Mobiles
             </button>
             <button
-              onClick={() => setMinDiscount((prev) => (prev === 30 ? 0 : 30))}
-              className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border ${
-                minDiscount === 30
-                  ? 'bg-red-600 text-white border-red-600 shadow'
-                  : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+              onClick={() => {
+                setCategory('Electronics');
+                setMinDiscount(0);
+              }}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer shrink-0 ${
+                category === 'Electronics'
+                  ? 'bg-amazon-dark text-amazon-yellow font-bold shadow'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              🔥 30%+ OFF
-            </button>
-            <button
-              onClick={() => setMinDiscount((prev) => (prev === 40 ? 0 : 40))}
-              className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border ${
-                minDiscount === 40
-                  ? 'bg-red-600 text-white border-red-600 shadow'
-                  : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
-              }`}
-            >
-              ⚡ 40%+ OFF
-            </button>
-            <button
-              onClick={() => setMinDiscount((prev) => (prev === 50 ? 0 : 50))}
-              className={`px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer border ${
-                minDiscount === 50
-                  ? 'bg-red-600 text-white border-red-600 shadow'
-                  : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
-              }`}
-            >
-              💥 50% OFF
+              💻 Electronics
             </button>
           </div>
         </div>

@@ -46,7 +46,7 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="relative w-full max-w-[1500px] mx-auto h-[250px] sm:h-[350px] md:h-[420px] overflow-hidden group">
+    <div className="relative w-full max-w-[1500px] mx-auto h-[210px] sm:h-[280px] md:h-[370px] overflow-hidden group select-none">
       {/* Background Slides */}
       {BANNERS.map((banner, index) => (
         <div
@@ -60,35 +60,63 @@ export default function HeroCarousel() {
             alt={banner.title}
             className="w-full h-full object-cover"
           />
-          {/* Gradient Overlay for Amazon effect */}
-          <div className="absolute inset-0 bg-gradient-to-t from-amazon-bg via-transparent to-black/40 flex flex-col justify-end p-6 sm:p-12 text-white">
-            <span className="bg-amazon-yellow text-amazon-dark font-black text-xs px-3 py-1 rounded w-fit mb-2 shadow">
-              {banner.badge}
-            </span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold drop-shadow-md max-w-2xl">
+          {/* Dual Gradient Overlay: Dark contrast at top for crystal clear text, smooth fade at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/35 to-transparent flex flex-col justify-start pt-3.5 sm:pt-6 md:pt-10 px-11 sm:px-16 md:px-20 text-white">
+            {/* Badge - Compact, sleek Amazon deal pill */}
+            <div className="mb-1 sm:mb-2">
+              <span className="inline-block bg-amazon-yellow text-amazon-dark font-black text-[9px] sm:text-xs px-2 py-0.5 sm:px-3 sm:py-1 rounded shadow-md tracking-wide uppercase">
+                {banner.badge}
+              </span>
+            </div>
+
+            {/* Title - Reduced mobile font size (text-[13px] sm:text-lg md:text-2xl) to prevent horizontal collision */}
+            <h2 className="text-[13px] sm:text-xl md:text-2xl lg:text-3xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] max-w-xs sm:max-w-lg md:max-w-2xl leading-snug text-white line-clamp-2">
               {banner.title}
             </h2>
-            <p className="text-sm sm:text-lg text-gray-200 mt-1 font-medium max-w-xl">
+
+            {/* Subtitle - Clean, readable and compact */}
+            <p className="text-[10px] sm:text-xs md:text-sm text-gray-200 mt-0.5 sm:mt-1 font-medium max-w-[260px] sm:max-w-md md:max-w-xl line-clamp-1 sm:line-clamp-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
               {banner.subtitle}
             </p>
           </div>
+
+          {/* Bottom gradient fade that transitions smoothly into the page background */}
+          <div className="absolute inset-x-0 bottom-0 h-12 sm:h-20 bg-gradient-to-t from-amazon-bg via-amazon-bg/60 to-transparent pointer-events-none" />
         </div>
       ))}
 
-      {/* Navigation Buttons */}
+      {/* Navigation Buttons: Compact circular floating buttons with clear margin */}
       <button
         onClick={prevSlide}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-black/70 text-white p-2 rounded-r-md transition opacity-80 group-hover:opacity-100"
+        aria-label="Previous Slide"
+        className="absolute left-1.5 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-black/45 hover:bg-black/80 text-white flex items-center justify-center transition opacity-80 hover:opacity-100 cursor-pointer backdrop-blur-sm border border-white/20 shadow-md hover:scale-105 active:scale-95"
       >
-        <ChevronLeft className="w-8 h-8" />
+        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
 
       <button
         onClick={nextSlide}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-black/70 text-white p-2 rounded-l-md transition opacity-80 group-hover:opacity-100"
+        aria-label="Next Slide"
+        className="absolute right-1.5 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-black/45 hover:bg-black/80 text-white flex items-center justify-center transition opacity-80 hover:opacity-100 cursor-pointer backdrop-blur-sm border border-white/20 shadow-md hover:scale-105 active:scale-95"
       >
-        <ChevronRight className="w-8 h-8" />
+        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
+
+      {/* Slide Indicator Dots */}
+      <div className="absolute bottom-1.5 sm:bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+        {BANNERS.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentIndex(idx)}
+            aria-label={`Go to slide ${idx + 1}`}
+            className={`transition-all duration-300 rounded-full cursor-pointer ${
+              idx === currentIndex
+                ? 'w-4 sm:w-5 h-1 sm:h-1.5 bg-amazon-yellow shadow'
+                : 'w-1 sm:w-1.5 h-1 sm:h-1.5 bg-white/50 hover:bg-white/90'
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
