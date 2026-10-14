@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, ShoppingCart, MapPin, User, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, MapPin, User, ChevronDown, FolderKanban } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import DeliveryLocationModal from './DeliveryLocationModal';
@@ -134,6 +134,16 @@ export default function Header({ selectedCategory = 'All', onCategoryChange }) {
               </span>
             </Link>
           )}
+
+          {/* Project Tracker & Rubric Dashboard */}
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black px-2.5 py-1.5 rounded text-xs shadow transition shrink-0"
+            title="Open Project Tracker Dashboard"
+          >
+            <FolderKanban className="w-4 h-4 stroke-[2.5]" />
+            <span className="hidden sm:inline">Project Tracker</span>
+          </Link>
 
           {/* Returns & Orders (Desktop only) */}
           <Link href="/orders" className="hidden sm:block p-2 rounded hover:outline hover:outline-1 hover:outline-white text-xs">

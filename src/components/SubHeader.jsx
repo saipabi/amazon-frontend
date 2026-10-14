@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   Menu,
@@ -17,6 +18,7 @@ import {
   PackageCheck,
   Flame,
   HelpCircle,
+  FolderKanban,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -114,8 +116,16 @@ export default function SubHeader({ selectedCategory = 'All', onCategorySelect }
           ))}
         </div>
 
-        <div className="ml-auto hidden lg:flex items-center gap-4 text-xs font-semibold text-amazon-yellow shrink-0">
-          <span>Amazon Prime Great Summer Sale is Live!</span>
+        <div className="ml-auto flex items-center gap-3 text-xs shrink-0">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-1 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold px-2 py-0.5 rounded text-xs transition shadow-sm"
+          >
+            <span>🚀 Project Tracker</span>
+          </Link>
+          <span className="hidden lg:inline text-amazon-yellow font-semibold">
+            Amazon Great Summer Sale is Live!
+          </span>
         </div>
       </div>
 
@@ -159,6 +169,28 @@ export default function SubHeader({ selectedCategory = 'All', onCategorySelect }
 
             {/* Drawer Scrollable Content */}
             <div className="flex-1 overflow-y-auto divide-y divide-gray-200">
+              {/* Project Tracker Module Section */}
+              <div className="py-3 bg-amber-50/70 border-b border-amber-200/60">
+                <div className="px-6 py-1 flex items-center justify-between">
+                  <h3 className="text-xs font-black text-amber-950 uppercase tracking-wider">
+                    Project Tracker Module
+                  </h3>
+                  <span className="bg-amber-500 text-slate-950 text-[10px] px-2 py-0.5 rounded font-black">
+                    RUBRIC
+                  </span>
+                </div>
+                <button
+                  onClick={() => handleNavigate('/dashboard')}
+                  className="w-full px-6 py-2.5 flex items-center justify-between text-sm text-slate-900 hover:bg-amber-100 transition text-left cursor-pointer font-bold"
+                >
+                  <span className="flex items-center gap-3">
+                    <FolderKanban className="w-4 h-4 text-amber-600" />
+                    <span>Project Tracker Dashboard</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-amber-600" />
+                </button>
+              </div>
+
               {/* Trending Section */}
               <div className="py-3">
                 <h3 className="px-6 py-2 text-sm font-bold text-gray-900 tracking-wide uppercase">
